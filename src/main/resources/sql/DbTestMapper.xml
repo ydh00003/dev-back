@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.springboot.backspringbootrestapi.dao.DbTestDao">
+ 
+ <select id="getData"
+          parameterType="com.springboot.backspringbootrestapi.model.TagsQueryVo"
+          resultType="com.springboot.backspringbootrestapi.model.TagsQueryReturnVo">
+    SELECT projectid
+           , resourceid
+           , concat('[{"key":','"',key,'","value":','"',value,'"}]') tags
+      FROM test_table
+     WHERE 1=1
+     <if test="projectId != null and projectId.size() > 0">
+       AND projectid IN
+       <foreach collection="projectId" item="item" open="(" separator="," close=")">#{item}</foreach>
+     </if>
+     <if test="resourceId != null and resourceId.size() > 0">
+       AND resourceid IN
+       <foreach collection="resourceId" item="item" open="(" separator="," close=")">#{item}</foreach>
+     </if>
+     <if test="tags != null and tags.size() > 0">
+       AND (key, value) IN
+       <foreach collection="tags" item="item" open="(" separator="," close=")">(#{item.key},#{item.value})</foreach>
+     </if>
+     ORDER BY projectid, resourceid, key, value
+ </select>
+
+</mapper>
