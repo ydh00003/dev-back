@@ -3,6 +3,10 @@ package com.springboot.backspringbootrestapi.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.backspringbootrestapi.dao.DbTestDao;
 import com.springboot.backspringbootrestapi.model.ResponseVO;
@@ -11,9 +15,6 @@ import com.springboot.backspringbootrestapi.model.TagsParamVo;
 import com.springboot.backspringbootrestapi.model.TagsQueryReturnVo;
 import com.springboot.backspringbootrestapi.model.TagsQueryVo;
 import com.springboot.backspringbootrestapi.model.TagsResultVo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service("dbTestServiceImpl")
 public class DbTestServiceImpl implements DbTestService{
@@ -54,7 +55,9 @@ public class DbTestServiceImpl implements DbTestService{
 
             ObjectMapper mapper = new ObjectMapper();
             List<TagsItemVo> tags;
-            tags = mapper.readValue(item.getTags(), ArrayList.class);
+            // type safety 경고 수정
+            // tags = mapper.readValue(item.getTags(), ArrayList.class);
+            tags = mapper.readValue(item.getTags(), new TypeReference<List<TagsItemVo>>(){});
             vo.setTags(tags);
 
             changeList.add(vo);
